@@ -1,82 +1,41 @@
-/**
-=========================================================
-* Crypto Dash  React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useMemo } from "react";
-
-// porp-types is a library for typechecking of props
 import PropTypes from "prop-types";
-
-// react-chartjs-2 components
 import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from "chart.js";
-
-// @mui material components
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from "chart.js";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
-
-// Crypto Dash React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-
-// ReportsLineChart configurations
+import TimelineItem from "examples/Timeline/TimelineItem";
 import configs from "examples/Charts/LineCharts/ReportsLineChart/configs";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 function ReportsLineChart({ color, title, description, date, chart }) {
-  const { data, options } = configs(chart.labels || [], chart.datasets || {});
+  const { data, options } = useMemo(() => {
+    if (!chart || !chart.labels || !chart.datasets) {
+      return {};
+    }
+    return configs(chart.labels, chart.datasets);
+  }, [chart]);
 
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox padding="1rem">
-        {useMemo(
-          () => (
-            <MDBox
-              variant="gradient"
-              bgColor={color}
-              borderRadius="lg"
-              coloredShadow={color}
-              py={2}
-              pr={0.5}
-              mt={-5}
-              height="12.5rem"
-            >
-              <Line data={data} options={options} redraw />
-            </MDBox>
-          ),
-          [chart, color]
+        {data && options && (
+          <MDBox
+            variant="gradient"
+            bgColor={color}
+            borderRadius="lg"
+            coloredShadow={color}
+            py={2}
+            pr={0.5}
+            mt={-5}
+            height="12.5rem"
+          >
+            <Line data={data} options={options} redraw />
+          </MDBox>
         )}
         <MDBox pt={3} pb={1} px={1}>
           <MDTypography variant="h6" textTransform="capitalize">
@@ -100,19 +59,23 @@ function ReportsLineChart({ color, title, description, date, chart }) {
   );
 }
 
-// Setting default values for the props of ReportsLineChart
 ReportsLineChart.defaultProps = {
   color: "info",
   description: "",
 };
 
-// Typechecking props for the ReportsLineChart
 ReportsLineChart.propTypes = {
   color: PropTypes.oneOf(["primary", "secondary", "info", "success", "warning", "error", "dark"]),
   title: PropTypes.string.isRequired,
   description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   date: PropTypes.string.isRequired,
-  chart: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.array, PropTypes.object])).isRequired,
+  chart: PropTypes.shape({
+    labels: PropTypes.arrayOf(PropTypes.string),
+    datasets: PropTypes.arrayOf(PropTypes.shape({
+      label: PropTypes.string,
+      data: PropTypes.arrayOf(PropTypes.number),
+    })),
+  }).isRequired,
 };
 
 export default ReportsLineChart;
