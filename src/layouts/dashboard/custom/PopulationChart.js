@@ -13,7 +13,7 @@ const PopulationChart = () => {
         const populationData = response.data.data;
         // Process populationData to fit the format expected by the DefaultLineChart component
         const formattedData = {
-          labels: populationData.map(item => item.Year),
+          labels: populationData.map(item => item.Year).reverse(),
           datasets: [
             {
               label: 'Population',
