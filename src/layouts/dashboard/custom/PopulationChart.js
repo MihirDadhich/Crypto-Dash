@@ -11,19 +11,18 @@ const PopulationChart = () => {
       try {
         const response = await axios.get('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
         const populationData = response.data.data;
-
         // Process populationData to fit the format expected by the DefaultLineChart component
         const formattedData = {
           labels: populationData.map(item => item.Year),
           datasets: [
             {
               label: 'Population',
-              data: populationData.map(item => item.Population),
-              color: 'info', // Specify the color of the icon
+              data: populationData.map(item => item.Population).reverse(),
+              color: 'primary', // Specify the color of the icon
             },
           ],
         };
-
+              
         setChartData(formattedData);
       } catch (error) {
         console.error('Error fetching population data:', error);

@@ -147,7 +147,7 @@ function Dashboard() {
           </Grid>
         </MDBox> */}
       </MDBox>
-      <Footer />
+      
     </DashboardLayout>
   );
 }
