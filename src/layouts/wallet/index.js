@@ -55,7 +55,7 @@ const WalletIntegration = () => {
     <Grid container direction="column" alignItems="center"> {/* Use a container with column direction */}
       {!web3 && (
         <Typography variant="body1" color="red">
-           <Link href="https://metamask.io/download.html" target="_blank"> MetaMask is not installed. Download</Link>
+           <Link href="https://metamask.io/download.html" target="_blank"> MetaMask is not installed. Download Now</Link>
         </Typography>
       )}
       {web3 && !account && (
